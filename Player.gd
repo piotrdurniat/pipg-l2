@@ -11,6 +11,12 @@ var direction = PI/2
 var rotation_speed = PI/18
 var attenuation = 0.98
 
+func get_velocity():
+	return velocity
+	
+func get_rotation():
+	return direction
+
 func _ready():
 	screen_size = get_viewport_rect().size
 	$AnimatedSprite.animation = "up"
@@ -60,9 +66,10 @@ func _process(delta):
 
 
 func _on_Player_body_entered(body):
-	hide() # player disappears after being hit
-	emit_signal("hit")
-	$CollisionShape2D.set_deferred("disabled", true)
+	if not body.is_in_group("projectiles"):
+		hide() # player disappears after being hit
+		emit_signal("hit")
+		$CollisionShape2D.set_deferred("disabled", true)
 	
 
 func start(pos):

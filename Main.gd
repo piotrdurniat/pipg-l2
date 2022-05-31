@@ -1,6 +1,8 @@
 extends Node
 
 export(PackedScene) var mob_scene
+export(PackedScene) var projectile_scene
+
 var score
 
 func _ready():
@@ -9,6 +11,7 @@ func _ready():
 func game_over():
 	$ScoreTimer.stop()
 	$MobTimer.stop()
+	$ProjectileTimer.stop()
 	
 	$HUD.show_game_over()
 	$Music.stop()
@@ -23,7 +26,7 @@ func new_game():
 	$HUD.show_message("Get Ready")
 	
 	get_tree().call_group("mobs", "queue_free")
-	
+	get_tree().call_group("projectiles", "queue_free")
 	$Music.play()
 
 func _on_MobTimer_timeout():
@@ -58,3 +61,16 @@ func _on_ScoreTimer_timeout():
 func _on_StartTimer_timeout():
 	$MobTimer.start()
 	$ScoreTimer.start()
+	$ProjectileTimer.start()
+
+func _on_ProjectileTimer_timeout():
+	var projectile = projectile_scene.instance()
+
+	projectile.position  = $Player.get_position()
+	projectile.rotation = $Player.get_rotation() - PI/2
+
+	var player_speed = $Player.get_velocity().length()
+	var velocity = Vector2(600.0 + player_speed, 0.0)
+	projectile.linear_velocity = velocity.rotated(projectile.rotation) 
+
+	add_child(projectile)

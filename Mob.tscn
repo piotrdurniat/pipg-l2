@@ -31,7 +31,6 @@ radius = 24.0
 height = 14.0
 
 [node name="RigidBody2D" type="RigidBody2D" groups=["mobs"]]
-collision_mask = 0
 gravity_scale = 0.0
 script = ExtResource( 7 )
 
